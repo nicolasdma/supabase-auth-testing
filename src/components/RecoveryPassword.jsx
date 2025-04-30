@@ -1,16 +1,15 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { UserAuth } from "../context/ContextAuth";
 import { Mail, Lock } from "lucide-react"; // Or use any other icon library
 
 const Signin = () => {
   const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [success, setSuccess] = React.useState("");
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
 
-  const { signInUser } = UserAuth();
-  const navigate = useNavigate();
+  const { recoveryPassword } = UserAuth();
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -18,11 +17,9 @@ const Signin = () => {
     setError(null);
 
     try {
-      const result = await signInUser({ email, password });
+      const result = await recoveryPassword({ email });
       if (result.success) {
-        navigate("/dashboard");
-      } else {
-        setError(result.message || "Something went wrong");
+        setSuccess("Recovery email sent successfully.");
       }
     } catch (err) {
       setError("An unexpected error occurred.", err);
@@ -43,32 +40,23 @@ const Signin = () => {
             alt="Logo"
             className="w-12 h-12 object-contain mb-2"
           />
-          <h2 className="text-2xl font-semibold">Sign in</h2>
+          <h2 className="text-2xl font-semibold">Recover your password</h2>
           <p className="text-sm text-gray-400">
-            Don’t have an account?{" "}
-            <Link to="/signup" className="text-yellow-400 hover:underline">
-              Sign up!
-            </Link>
+            You'll receive an email to reset your password.
           </p>
         </div>
 
         <div className="space-y-4">
           <div className="relative">
-            <Mail className="absolute top-3 left-3 text-gray-400 mt-1" size={18} />
+            <Mail
+              className="absolute top-3 left-3 text-gray-400 mt-1"
+              size={18}
+            />
             <input
               type="email"
               placeholder="youremail@example.com"
               className="w-full pl-10 pr-3 py-3 bg-transparent border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="relative">
-            <Lock className="absolute top-3 left-3 text-gray-400 mt-1" size={18} />
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full pl-10 pr-3 py-3 bg-transparent border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <button
@@ -80,15 +68,20 @@ const Signin = () => {
                 : "bg-green-600 hover:bg-green-700"
             }`}
           >
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? "Sending ..." : "Send"}
           </button>
-          <p className="text-sm text-gray-400 flex flex-col items-center">
-            <Link to="/recovery" className="text-yellow-400 hover:underline">
-              Forgot password?
-            </Link>
-          </p>
+          <div className="flex flex-row justify-center gap-4">
+            <p className="text-sm text-gray-400">
+              <Link to="/signin" className="text-yellow-400 hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </div>
           {error && (
             <p className="text-sm text-red-500 text-center pt-2">{error}</p>
+          )}
+          {success && (
+            <p className="text-sm text-green-400 text-center pt-2">{success}</p>
           )}
         </div>
       </form>

@@ -19,6 +19,30 @@ export const AuthContextProvider = ({ children }) => {
     return { success: true, data };
   };
 
+  // Recovery password
+  const recoveryPassword = async ({ email }) => {
+    let { data, error } = await supabase.auth.resetPasswordForEmail(email)
+    if (error) {
+      console.error("Problem with the signing up: ", error);
+      return { success: false, error };
+    }
+    return { success: true, data };
+  };
+
+  // Update password
+  const updatePassword = async ({ email, password }) => {
+    const { data, error } = await supabase.auth.updateUser({
+        email: email,
+        password: password,
+      })
+    if (error) {
+      console.error("Problem with the signing up: ", error);
+      return { success: false, error };
+    }
+    return { success: true, data };
+  }
+
+
   // Sign in
   const signInUser = async ({ email, password }) => {
     try {
@@ -59,7 +83,7 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ session, signUpNewUser, signOut, signInUser }}
+      value={{ session, signUpNewUser, signOut, signInUser, recoveryPassword, updatePassword }}
     >
       {children}
     </AuthContext.Provider>

@@ -1,24 +1,30 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserAuth } from "../context/ContextAuth";
 import { Mail, Lock } from "lucide-react"; // Or use any other icon library
 
-const Signin = () => {
+const UpdatePassword = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
 
-  const { signInUser } = UserAuth();
+  const { session, updatePassword } = UserAuth();
   const navigate = useNavigate();
 
-  const handleSignIn = async (e) => {
+    React.useEffect(() => {
+    if (session) {
+        setEmail(session.user.email);
+    }
+  }, [session]);
+
+  const handleUpdatePassword = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      const result = await signInUser({ email, password });
+      const result = await updatePassword({ email, password });
       if (result.success) {
         navigate("/dashboard");
       } else {
@@ -34,7 +40,7 @@ const Signin = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-black/60 px-4">
       <form
-        onSubmit={handleSignIn}
+        onSubmit={handleUpdatePassword}
         className="w-full max-w-md bg-black/80 text-white p-8 rounded-2xl shadow-md backdrop-blur-md"
       >
         <div className="flex flex-col items-center mb-6">
@@ -43,27 +49,28 @@ const Signin = () => {
             alt="Logo"
             className="w-12 h-12 object-contain mb-2"
           />
-          <h2 className="text-2xl font-semibold">Sign in</h2>
-          <p className="text-sm text-gray-400">
-            Don’t have an account?{" "}
-            <Link to="/signup" className="text-yellow-400 hover:underline">
-              Sign up!
-            </Link>
-          </p>
+          <h2 className="text-2xl font-semibold">Update your password</h2>
         </div>
 
         <div className="space-y-4">
           <div className="relative">
-            <Mail className="absolute top-3 left-3 text-gray-400 mt-1" size={18} />
+            <Mail
+              className="absolute top-3 left-3 text-gray-400 mt-1"
+              size={18}
+            />
             <input
               type="email"
-              placeholder="youremail@example.com"
               className="w-full pl-10 pr-3 py-3 bg-transparent border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              disabled
             />
           </div>
           <div className="relative">
-            <Lock className="absolute top-3 left-3 text-gray-400 mt-1" size={18} />
+            <Lock
+              className="absolute top-3 left-3 text-gray-400 mt-1"
+              size={18}
+            />
             <input
               type="password"
               placeholder="Password"
@@ -80,13 +87,8 @@ const Signin = () => {
                 : "bg-green-600 hover:bg-green-700"
             }`}
           >
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? "Updating ..." : "Update"}
           </button>
-          <p className="text-sm text-gray-400 flex flex-col items-center">
-            <Link to="/recovery" className="text-yellow-400 hover:underline">
-              Forgot password?
-            </Link>
-          </p>
           {error && (
             <p className="text-sm text-red-500 text-center pt-2">{error}</p>
           )}
@@ -96,4 +98,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default UpdatePassword;

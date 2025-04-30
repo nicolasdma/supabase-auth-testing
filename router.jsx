@@ -4,11 +4,15 @@ import Signup from "./src/components/Signup";
 import Signin from "./src/components/Signin";
 import Dashboard from "./src/components/Dashboard";
 import PrivateRoute from "./src/components/PrivateRoute";
+import RecoveryPassword from "./src/components/RecoveryPassword";
+import UpdatePassword from "./src/components/UpdatePassword";
 
 export const router = createBrowserRouter([
   { path: "/", element: <App /> },
   { path: "/signup", element: <Signup /> },
   { path: "/signin", element: <Signin /> },
+  { path: "/recovery", element: <RecoveryPassword /> },
+  { path: "/update", element:       <PrivateRoute><UpdatePassword /></PrivateRoute> },
   {
     path: "/dashboard",
     element: (
