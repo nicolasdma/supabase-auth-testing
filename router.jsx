@@ -12,7 +12,7 @@ export const router = createBrowserRouter([
   { path: "/signup", element: <Signup /> },
   { path: "/signin", element: <Signin /> },
   { path: "/recovery", element: <RecoveryPassword /> },
-  { path: "/update", element:       <PrivateRoute><UpdatePassword /></PrivateRoute> },
+  { path: "/update", element: <UpdatePassword /> },
   {
     path: "/dashboard",
     element: (
